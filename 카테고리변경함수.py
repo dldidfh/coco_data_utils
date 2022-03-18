@@ -1,14 +1,17 @@
 import os 
 import shutil 
 import cv2 
-
+import time 
 
 def distribute_category(dir_path, save_path, target_cat = {}):
     extentions = ['.jpg', '.JPG', '.png', '.PNG']
     dir_path_file_list = os.listdir(dir_path)
+    count = 0
+    print('전체 이미지 개수 : ', len(dir_path_file_list)//2)
     for file_name in dir_path_file_list:
         root, child = os.path.splitext(file_name)
         if child == '.txt':
+            count +=1
             txt_source_path = os.path.join(dir_path, root + '.txt')
             for ext in extentions:
                 if os.path.isfile(os.path.join(dir_path, root + ext)):
@@ -35,18 +38,18 @@ def distribute_category(dir_path, save_path, target_cat = {}):
                                 string = string + "{} {} {} {} {}\n".format(converted_class, box[1], box[2], box[3], box[4])
                                 break
                 # 만약 값이 아무것도 없다면 확인 
-                if string == '':
-                    image = cv2.imread(source_image_path)
-                    cv2.imshow('qwe', image)
-                    cv2.waitKey(0)
+                # if string == '':
+                #     image = cv2.imread(source_image_path)
+                #     cv2.imshow('qwe', image)
+                #     cv2.waitKey(0)
 
             txt_save_path = os.path.join(save_path, root + '.txt')
             image_save_path = os.path.join(save_path, root + ext)
             with open(txt_save_path, 'w') as wd :
                 wd.write(string)
-            shutil.move(source_image_path, image_save_path)
-            # shutil.copy(source_image_path, image_save_path)
-
+            # shutil.move(source_image_path, image_save_path)
+            shutil.copy(source_image_path, image_save_path)
+            print('진행률 : {:.2f}\t {}/{} '.format(100*(count/(len(dir_path_file_list)//2)),count,len(dir_path_file_list)//2), end='\r')
 
 
 # 건기연, 용인 15종 데이터 분류 
@@ -117,7 +120,34 @@ custom_category = {
     '4' : '6' # coco motor -> category_8 motor
 }
 
-dir_path = 'E:/work/img_augmentation/normalized_coco'
-save_path = 'D:/데이터 정리/8종/cocomotor/'
 
-distribute_category(dir_path, save_path, custom_category)
+
+# # 코코 -> 8종
+# dir_path = 'E:/work/img_augmentation/normalized_coco'
+# save_path = 'D:/데이터 정리/8종/cocomotor/'
+# time1 = time.time()
+# distribute_category(dir_path, save_path, custom_category)
+# print("\n첫번째 걸린 시간 {:.2f}".format( 1000(time.time() - time1)))
+
+# # 건기연 15종 -> 8종 
+# dir_path = 'D:/건기연/건기연 학습용 데이터 원본/' qweqweqweqweqwe
+# save_path = 'D:/data_clean/category_8'
+# time1 = time.time()
+# distribute_category(dir_path, save_path, category_15_to_8)
+# print("\n두번째 걸린 시간 {:.2f}".format( 1000(time.time() - time1)))
+
+# 용인 15종 -> 8종
+root_dir_path = ['D:/data_clean/category_15/2022_03_08_23694_15_types', 'D:/data_clean/category_15/2022_03_17_23120_15_types']
+save_path = 'D:/data_clean/category_8/all'
+time1 = time.time()
+for dir_path in root_dir_path:
+    distribute_category(dir_path, save_path, category_15_to_8)
+print("\n세번째 걸린 시간 {:.2f}".format( 1000(time.time() - time1)))
+
+
+# # 용인 8종 -> 6종
+# distribute_category(dir_path, save_path, custom_category)
+# # 용인 15종 -> 6종
+# distribute_category(dir_path, save_path, custom_category)
+# # 건기연 15종 -> 6종 
+# distribute_category(dir_path, save_path, custom_category)

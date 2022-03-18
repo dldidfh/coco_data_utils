@@ -1,0 +1,5 @@
+img/
+output/
+normalized_coco/
+coco_data/
+__pycache__/

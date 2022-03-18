@@ -142,7 +142,7 @@ save_path = 'D:/data_clean/category_8/all'
 time1 = time.time()
 for dir_path in root_dir_path:
     distribute_category(dir_path, save_path, category_15_to_8)
-print("\n세번째 걸린 시간 {:.2f}".format( 1000(time.time() - time1)))
+print("\n세번째 걸린 시간 {:.2f}".format( 1000*(time.time() - time1)))
 
 
 # # 용인 8종 -> 6종
